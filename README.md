@@ -4,6 +4,10 @@ Customers browse the menu, add dishes to a cart, place a cash-on-delivery order 
 
 **Tech:** MongoDB · Express · React · Node.js · Redux Toolkit (RTK Query) · Tailwind CSS · JWT login
 
+**Live demo: [rasoi-opal.vercel.app](https://rasoi-opal.vercel.app)** · Kitchen (admin) login: `admin@rasoi.test` / `admin12345`
+
+> Hosted on free plans (Vercel + Render + MongoDB Atlas). If nobody has used it for a while, the first load can take up to a minute while the server wakes up.
+
 ## Screenshots
 
 | Menu (night mode) | Cart and bill (day mode) |
