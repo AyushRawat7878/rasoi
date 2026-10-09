@@ -1,0 +1,166 @@
+@import "tailwindcss";
+
+/*
+  Two flat themes. Components only use these color names, so switching
+  data-theme on <html> re-colors the whole site.
+  Day:   warm paper, dark brown text, chilli-red actions.
+  Night: charcoal, white text, sun-yellow actions.
+*/
+@theme {
+  --font-sans: "Figtree", ui-sans-serif, system-ui, "Segoe UI", sans-serif;
+  --font-display: "Fraunces", Georgia, serif;
+
+  --color-page: #fbf5ea;
+  --color-card: #fffdf8;
+  --color-sunk: #f4e9d4;      /* inputs, emoji tiles */
+  --color-line: #ecdcbc;
+  --color-ink: #2a1610;       /* main text */
+  --color-soft: #6e5446;      /* secondary text */
+  --color-faint: #a88f78;
+  --color-accent: #d62411;    /* buttons: fiery red */
+  --color-accent-hover: #b01c0c;
+  --color-on-accent: #fffaf0;
+  --color-accent-text: #c81e0e;
+  --color-tint: #fbe9c4;      /* light golden background */
+  --color-veg: #15803d;
+  --color-nonveg: #c81e0e;
+  --color-gold: #c28a12;      /* golden highlights */
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --color-page: #140b08;
+  --color-card: #1f120d;
+  --color-sunk: #2b1a12;
+  --color-line: #3d271b;
+  --color-ink: #fbf3e4;
+  --color-soft: #c4ab92;
+  --color-faint: #876c57;
+  --color-accent: #ea2d17;    /* fiery red */
+  --color-accent-hover: #ff4a2e;
+  --color-on-accent: #fff8ee;
+  --color-accent-text: #f2bd3c; /* golden */
+  --color-tint: #3a2a10;
+  --color-veg: #4ade80;
+  --color-nonveg: #ff6b55;
+  --color-gold: #f2bd3c;
+}
+
+@layer base {
+  html { color-scheme: light; scroll-behavior: smooth; }
+  body {
+    @apply bg-page text-ink font-sans antialiased;
+    transition: background-color .2s ease, color .2s ease;
+  }
+  ::selection { background: var(--color-tint); }
+  input, textarea, select { @apply bg-sunk text-ink; }
+}
+
+/* Small reusable styles (Tailwind v4 "utilities", used like normal classes) */
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-lg px-4 py-2.5 text-sm font-semibold transition-colors disabled:cursor-not-allowed disabled:opacity-50; }
+@utility btn-primary { @apply btn bg-accent text-on-accent hover:bg-accent-hover; }
+@utility btn-ghost { @apply btn border border-line hover:bg-sunk; }
+@utility field { @apply w-full rounded-lg border border-line px-3 py-2.5 text-sm outline-none focus:border-accent; }
+@utility label { @apply mb-1.5 block text-sm font-medium text-soft; }
+@utility card { @apply rounded-xl border border-line bg-card; }
+
+@keyframes fadein { from { opacity: 0; transform: translateY(-3px); } to { opacity: 1; transform: none; } }
+
+/* ---------- Fire banner (menu page) ---------- */
+.fire { position: absolute; inset: 0; overflow: hidden; pointer-events: none; }
+.fire-glow {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(255, 170, 40, 0.45), rgba(255, 90, 20, 0.15) 45%, transparent 75%);
+  animation: glow 3s ease-in-out infinite alternate;
+}
+.flame {
+  position: absolute; bottom: -45%; height: 110%;
+  border-radius: 50% 50% 40% 40% / 60% 60% 40% 40%;
+  background: radial-gradient(ellipse at 50% 90%, #fff1a8 0%, #ffc531 22%, #ff7a1a 45%, rgba(255, 60, 20, 0.5) 62%, transparent 72%);
+  filter: blur(14px);
+  mix-blend-mode: screen;
+  transform-origin: 50% 100%;
+  animation: flicker 2.5s ease-in-out infinite alternate;
+}
+.spark {
+  position: absolute; bottom: -6px; width: 4px; height: 4px; border-radius: 9999px;
+  background: #ffe08a;
+  box-shadow: 0 0 6px 2px rgba(255, 170, 50, 0.85);
+  opacity: 0;
+  animation: rise 4.5s linear infinite;
+}
+@keyframes flicker {
+  0%   { transform: scale(1, 0.82) translateX(0);   opacity: 0.55; }
+  35%  { transform: scale(0.94, 1.02) translateX(3%); opacity: 0.8; }
+  70%  { transform: scale(1.04, 0.9) translateX(-2%); opacity: 0.65; }
+  100% { transform: scale(0.97, 1.08) translateX(2%); opacity: 0.85; }
+}
+@keyframes rise {
+  0%   { transform: translate(0, 0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 0.7; }
+  100% { transform: translate(var(--drift, 0px), var(--rise, -230px)) scale(0.4); opacity: 0; }
+}
+@keyframes glow { from { opacity: 0.7; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .flame, .spark, .fire-glow { animation: none; }
+}
+
+/* ---------- Burning logo (header) ---------- */
+/* Fire colors scroll up through the letters, and the glow flickers */
+.burning {
+  background: repeating-linear-gradient(to top, #c81e0e 0px, #ff4d0d 9px, #ff9a1f 17px, #ffcf3f 23px, #ff6a14 31px, #c81e0e 40px);
+  background-size: 100% 40px;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: burn-rise 1.4s linear infinite, burn-glow 0.9s ease-in-out infinite alternate;
+}
+.logo-sparks { position: absolute; inset: 0; pointer-events: none; }
+.logo-sparks .spark {
+  bottom: 55%; width: 3px; height: 3px;
+  --rise: -26px;
+  animation-duration: 1.8s;
+}
+@keyframes burn-rise { from { background-position: 0 0; } to { background-position: 0 -40px; } }
+@keyframes burn-glow {
+  0%   { filter: drop-shadow(0 0 2px rgba(255, 120, 20, 0.7)) drop-shadow(0 -2px 6px rgba(255, 60, 0, 0.35)); }
+  50%  { filter: drop-shadow(0 0 4px rgba(255, 160, 40, 0.9)) drop-shadow(0 -4px 10px rgba(255, 80, 0, 0.5)); }
+  100% { filter: drop-shadow(0 0 3px rgba(255, 110, 20, 0.75)) drop-shadow(0 -3px 8px rgba(255, 50, 0, 0.4)); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .burning { animation: none; }
+  .logo-sparks { display: none; }
+}
+
+/* ---------- Cooking animation (when a dish is added) ---------- */
+.cook { position: relative; width: 100%; height: 100%; display: grid; place-items: center; }
+.cook-tile { box-shadow: inset 0 -30px 40px -20px rgba(255, 120, 20, 0.35); }
+.cook .pan { font-size: 44px; line-height: 1; margin-top: 4px; animation: toss 0.32s ease-in-out infinite alternate; }
+.cook .cook-fire { position: absolute; bottom: 22px; font-size: 18px; transform-origin: 50% 100%; animation: flick 0.18s ease-in-out infinite alternate; }
+.cook .cook-label {
+  position: absolute; top: 6px; font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--color-accent-text); animation: blink 0.6s ease-in-out infinite alternate;
+}
+.steam {
+  position: absolute; top: 26px; width: 5px; height: 16px; border-radius: 9999px;
+  background: var(--color-faint); filter: blur(2px); opacity: 0;
+  animation: steam 0.9s ease-out infinite;
+}
+.steam.s1 { left: 40%; }
+.steam.s2 { left: 50%; animation-delay: 0.25s; }
+.steam.s3 { left: 60%; animation-delay: 0.5s; }
+.pop-in { animation: pop-in 0.4s cubic-bezier(.2, 1.6, .5, 1); }
+@keyframes toss { from { transform: rotate(-9deg) translateY(1px); } to { transform: rotate(9deg) translateY(-4px); } }
+@keyframes flick { from { transform: scale(1, 0.8); opacity: 0.8; } to { transform: scale(0.9, 1.15); opacity: 1; } }
+@keyframes blink { from { opacity: 0.55; } to { opacity: 1; } }
+@keyframes steam {
+  0% { transform: translateY(6px) scaleX(1); opacity: 0; }
+  30% { opacity: 0.7; }
+  100% { transform: translateY(-16px) scaleX(1.8); opacity: 0; }
+}
+span.pop-in { display: inline-block; }
+@keyframes pop-in { 0% { transform: scale(0.3); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+  .cook .pan, .cook .cook-fire, .cook .cook-label, .steam, .pop-in { animation: none; }
+}

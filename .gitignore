@@ -1,0 +1,7 @@
+node_modules
+.env
+.data
+dist
+*-log.txt
+server-tests-only.bat
+push-to-github.bat
