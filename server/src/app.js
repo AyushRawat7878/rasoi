@@ -7,7 +7,8 @@ import orderRoutes from './routes/orders.js'
 
 export function createApp() {
   const app = express()
-  app.use(cors({ origin: config.clientOrigin }))
+  // Only our own website may call the API. CLIENT_ORIGIN can list several addresses, separated by commas.
+  app.use(cors({ origin: config.clientOrigin.split(',').map((o) => o.trim()) }))
   app.use(express.json({ limit: '100kb' }))
   app.use((req, res, next) => {
     req.body ??= {} // Express 5 leaves body undefined when nothing was sent

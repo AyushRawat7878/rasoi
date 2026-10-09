@@ -1,0 +1,23 @@
+# Render.com settings for the API server (free plan)
+services:
+  - type: web
+    name: rasoi-api
+    runtime: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    healthCheckPath: /api/health
+    envVars:
+      - key: MONGODB_URI       # paste your MongoDB Atlas link here
+        sync: false
+      - key: CLIENT_ORIGIN     # your Vercel website address
+        sync: false
+      - key: JWT_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        value: admin@rasoi.test
+      - key: ADMIN_PASSWORD
+        value: admin12345
+      - key: MONGOMS_DISABLE_POSTINSTALL   # the local test database isn't needed online
+        value: "1"

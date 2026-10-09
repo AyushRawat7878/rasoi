@@ -85,6 +85,7 @@ export default function Menu() {
             </button>
           </p>
         )}
+        {isLoading && <WakeUpNote />}
         {isLoading && <MenuSkeleton />}
         {error && <p className="mt-6 rounded-lg bg-sunk p-4 text-nonveg">{errorText(error)}</p>}
         {!isLoading && !error && items.length === 0 && (
@@ -161,6 +162,22 @@ function MobileCartBar() {
       </span>
       <span>View cart →</span>
     </Link>
+  )
+}
+
+// The free server sleeps when nobody uses it. If loading takes long, say why.
+function WakeUpNote() {
+  const [slow, setSlow] = useState(false)
+  useEffect(() => {
+    const t = setTimeout(() => setSlow(true), 3000)
+    return () => clearTimeout(t)
+  }, [])
+  if (!slow) return null
+  return (
+    <p className="mt-4 flex items-center gap-2 rounded-lg bg-tint px-4 py-3 text-sm text-accent-text">
+      <span className="animate-pulse">🔥</span>
+      Waking up the kitchen… The free server sleeps when idle, so the first load can take up to a minute.
+    </p>
   )
 }
 
