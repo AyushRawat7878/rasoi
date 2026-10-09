@@ -103,3 +103,7 @@ The photos in `client/public/dishes` come from Wikimedia Commons under Creative 
 1. Create a free database on **MongoDB Atlas** and put its connection string in `MONGODB_URI`.
 2. Deploy `server/` to a Node host such as Render with `MONGODB_URI`, `JWT_SECRET`, `ADMIN_EMAIL`, `ADMIN_PASSWORD` and `CLIENT_ORIGIN` (your website's address).
 3. Deploy `client/` to Vercel or Netlify with `VITE_API_URL` set to the server's address.
+
+## Author
+
+**Ayush Rawat** · [GitHub](https://github.com/AyushRawat7878)
